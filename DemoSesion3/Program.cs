@@ -1,4 +1,7 @@
 
+using DemoSesion3.Helpers;
+using Microsoft.OpenApi.Models;
+
 namespace DemoSesion3
 {
     public class Program
@@ -9,10 +12,12 @@ namespace DemoSesion3
 
             // Add services to the container.
 
-            builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddControllers();            
+
+            builder.Services.ConfigureSwagger();
+
+            builder.Services.AddSingleton<UsersDataStore>();
+
 
             var app = builder.Build();
 
@@ -25,10 +30,14 @@ namespace DemoSesion3
 
             app.UseHttpsRedirection();
 
+            app.UseRouting();
+
             app.UseAuthorization();
 
-
-            app.MapControllers();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
 
             app.Run();
         }
