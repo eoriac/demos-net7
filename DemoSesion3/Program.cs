@@ -1,5 +1,6 @@
 
 using DemoSesion3.Helpers;
+using DemoSesion3.Services;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.OpenApi.Models;
 
@@ -16,13 +17,19 @@ namespace DemoSesion3
             builder.Services.AddControllers(options =>
             {
                 options.ReturnHttpNotAcceptable = true;
-            }).AddXmlDataContractSerializerFormatters();            
+            }).AddNewtonsoftJson()
+            .AddXmlDataContractSerializerFormatters();            
 
             builder.Services.ConfigureSwagger();
 
             builder.Services.AddSingleton<UsersDataStore>();
             builder.Services.AddSingleton<FileExtensionContentTypeProvider>();
 
+#if DEBUG
+            builder.Services.AddTransient<INotificationService, LocalNotificationService>();
+#else
+            builder.Services.AddTransient<INotificationService, CloudNotificationService>();
+#endif
 
             var app = builder.Build();
 
