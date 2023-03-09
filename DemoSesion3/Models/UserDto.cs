@@ -9,5 +9,15 @@
         public string Email { get; set; }
 
         public string? AvatarUrl { get; set; }
+
+        public int NumberOfGames
+        {
+            get
+            {
+                return this.Games.Count;
+            }
+        }
+
+        public ICollection<GameDto> Games { get; set; } = new List<GameDto>();
     }
 }

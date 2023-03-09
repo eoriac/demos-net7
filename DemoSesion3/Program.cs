@@ -1,5 +1,6 @@
 
 using DemoSesion3.Helpers;
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.OpenApi.Models;
 
 namespace DemoSesion3
@@ -12,11 +13,15 @@ namespace DemoSesion3
 
             // Add services to the container.
 
-            builder.Services.AddControllers();            
+            builder.Services.AddControllers(options =>
+            {
+                options.ReturnHttpNotAcceptable = true;
+            }).AddXmlDataContractSerializerFormatters();            
 
             builder.Services.ConfigureSwagger();
 
             builder.Services.AddSingleton<UsersDataStore>();
+            builder.Services.AddSingleton<FileExtensionContentTypeProvider>();
 
 
             var app = builder.Build();
