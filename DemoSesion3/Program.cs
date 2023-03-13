@@ -1,8 +1,9 @@
 
+using DemoSesion3.Context;
 using DemoSesion3.Helpers;
+using DemoSesion3.Migrations;
 using DemoSesion3.Services;
 using Microsoft.AspNetCore.StaticFiles;
-using Microsoft.OpenApi.Models;
 
 namespace DemoSesion3
 {
@@ -13,6 +14,9 @@ namespace DemoSesion3
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            builder.Services.AddSingleton<DapperContext>();
+            builder.Services.AddSingleton<Database>();
+
 
             builder.Services.AddControllers(options =>
             {
@@ -50,6 +54,8 @@ namespace DemoSesion3
             {
                 endpoints.MapControllers();
             });
+
+            app.MigrateDatabase();
 
             app.Run();
         }
