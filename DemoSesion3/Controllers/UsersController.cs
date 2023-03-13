@@ -22,7 +22,7 @@ namespace DemoSesion3.Controllers
         }
 
         [HttpGet("{id}")]
-        public ActionResult<UserDto> User(int id)
+        public ActionResult<UserDto> User(Guid id)
         {
             var user = dataStore.Users.FirstOrDefault(user => user.Id == id);
 

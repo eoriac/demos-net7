@@ -21,7 +21,7 @@ namespace DemoSesion3.Controllers
         }
 
         [HttpGet(Name = "UsersGames")]
-        public ActionResult<ICollection<GameDto>> UserGames(int userId, string? name, string? queryPattern, string? orderBy,
+        public ActionResult<ICollection<GameDto>> UserGames(Guid userId, string? name, string? queryPattern, string? orderBy,
             int pageNumber = 1, int pageSize = 5)
         {
             if (pageSize > maxGamesPageSize)
@@ -73,7 +73,7 @@ namespace DemoSesion3.Controllers
         }
 
         [HttpGet("{gameId}", Name = "GetName")]
-        public ActionResult<GameDto> UserGame(int userId, int gameId)
+        public ActionResult<GameDto> UserGame(Guid userId, Guid gameId)
         {
             var user = this.dataStore.Users.FirstOrDefault(usr => usr.Id == userId);
 
@@ -93,7 +93,7 @@ namespace DemoSesion3.Controllers
         }
 
         [HttpPost]
-        public ActionResult<GameDto> CreateGame(int userId, GamesForCreationDto game)
+        public ActionResult<GameDto> CreateGame(Guid userId, GamesForCreationDto game)
         {
             var user = this.dataStore.Users.FirstOrDefault(c => c.Id == userId);
             if (user == null)
@@ -107,7 +107,7 @@ namespace DemoSesion3.Controllers
 
             var resultGame = new GameDto()
             {
-                Id = ++maxGameId,
+                Id = Guid.NewGuid(),
                 Name = game.Name,
                 Description = game.Description
             };
@@ -125,7 +125,7 @@ namespace DemoSesion3.Controllers
         }
 
         [HttpPut("{gameId}")]
-        public ActionResult<GameDto> UpdateGame(int userId, int gameId, GamesForUpdateDto game)
+        public ActionResult<GameDto> UpdateGame(Guid userId, Guid gameId, GamesForUpdateDto game)
         {
             var user = this.dataStore.Users.FirstOrDefault(c => c.Id == userId);
             if (user == null)
@@ -147,7 +147,7 @@ namespace DemoSesion3.Controllers
         }
 
         [HttpPatch("{gameId}")]
-        public ActionResult PartialUpdate(int userId, int gameId, JsonPatchDocument<GamesForUpdateDto> patchDocument)
+        public ActionResult PartialUpdate(Guid userId, Guid gameId, JsonPatchDocument<GamesForUpdateDto> patchDocument)
         {
             var user = this.dataStore.Users.FirstOrDefault(c => c.Id == userId);
             if (user == null)
@@ -187,7 +187,7 @@ namespace DemoSesion3.Controllers
         }
 
         [HttpDelete("{gameId}")]
-        public ActionResult Delete(int userId, int gameId)
+        public ActionResult Delete(Guid userId, Guid gameId)
         {
             var user = this.dataStore.Users.FirstOrDefault(c => c.Id == userId);
             if (user == null)

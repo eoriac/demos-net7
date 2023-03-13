@@ -3,7 +3,10 @@ using DemoSesion3.Context;
 using DemoSesion3.Helpers;
 using DemoSesion3.Migrations;
 using DemoSesion3.Services;
+using FluentMigrator.Runner;
 using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.Extensions.Configuration;
+using System.Reflection;
 
 namespace DemoSesion3
 {
@@ -16,7 +19,9 @@ namespace DemoSesion3
             // Add services to the container.
             builder.Services.AddSingleton<DapperContext>();
             builder.Services.AddSingleton<Database>();
-
+            //builder.Services.AddFluentMigratorCore().ConfigureRunner(c => c.AddSQLite()
+            //    .WithGlobalConnectionString(Configuration.GetConnectionString("SqlConnection"))
+            //    .ScanIn(Assembly.GetExecutingAssembly()).For.Migrations()); ;
 
             builder.Services.AddControllers(options =>
             {
