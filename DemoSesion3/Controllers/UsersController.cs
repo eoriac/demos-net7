@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DemoSesion3.Contracts;
+using DemoSesion3.Entities;
 using DemoSesion3.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -39,9 +40,9 @@ namespace DemoSesion3.Controllers
             if (userFromDb == null)
             {
                 return NotFound();
-            }
+            }           
 
-            var userForResult = mapper.Map<UserDto>(userFromDb);
+            var userForResult = mapper.Map<UserDto>(userFromDb);            
 
             return Ok(userForResult);
         }

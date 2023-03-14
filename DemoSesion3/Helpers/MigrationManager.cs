@@ -16,6 +16,8 @@ namespace DemoSesion3.Helpers
                 {
                     databaseService.CreateDatabase("DapperDemoSessions");
                     migrationService.ListMigrations();
+                    // Reset tables apply migration InitialTables down
+                    // migrationService.MigrateDown(2023130300000);
                     migrationService.MigrateUp();
                 }
                 catch (Exception ex)

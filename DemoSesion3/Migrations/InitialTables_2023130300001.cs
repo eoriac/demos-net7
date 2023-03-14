@@ -17,12 +17,12 @@ namespace DemoSesion3.Migrations
                 .WithColumn("Id").AsGuid().NotNullable().PrimaryKey()
                 .WithColumn("Name").AsString(50).NotNullable()
                 .WithColumn("Email").AsString(50).NotNullable()
-                .WithColumn("AvatarUrl").AsString(200);
+                .WithColumn("AvatarUrl").AsString(200).Nullable();
 
             Create.Table("Games")
                 .WithColumn("Id").AsGuid().NotNullable().PrimaryKey()
                 .WithColumn("Name").AsString(50).NotNullable()
-                .WithColumn("Description").AsString(200)
+                .WithColumn("Description").AsString(200).Nullable()
                 .WithColumn("UserId").AsGuid().NotNullable().ForeignKey("Users", "Id");
         }
     }

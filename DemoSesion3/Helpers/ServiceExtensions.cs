@@ -1,5 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DemoSesion3.Context;
+using DemoSesion3.Migrations;
+using FluentMigrator.Runner;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
+using System.Reflection;
 
 namespace DemoSesion3.Helpers
 {
@@ -48,6 +52,18 @@ namespace DemoSesion3.Helpers
 
                 setupAction.ReturnHttpNotAcceptable = true;
             });
+        }
+
+        public static void ConfigureDb(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddSingleton<DapperContext>();
+            services.AddSingleton<Database>();
+
+            services.AddLogging(c => c.AddFluentMigratorConsole())
+                .AddFluentMigratorCore()
+                .ConfigureRunner(c => c.AddSqlServer2016()
+                    .WithGlobalConnectionString(configuration.GetConnectionString("SqlConnection"))
+                    .ScanIn(Assembly.GetExecutingAssembly()).For.Migrations());
         }
     }
 }
