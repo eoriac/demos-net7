@@ -16,7 +16,7 @@ namespace DemoSesion3.Helpers
                 {
                     databaseService.CreateDatabase("DapperDemoSessions");
                     migrationService.ListMigrations();
-                    migrationService.MigrateUp(2023130300001);
+                    migrationService.MigrateUp();
                 }
                 catch (Exception ex)
                 {
