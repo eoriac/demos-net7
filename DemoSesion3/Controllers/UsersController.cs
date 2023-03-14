@@ -1,4 +1,6 @@
-﻿using DemoSesion3.Models;
+﻿using AutoMapper;
+using DemoSesion3.Contracts;
+using DemoSesion3.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,30 +10,40 @@ namespace DemoSesion3.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly UsersDataStore dataStore;
+        private readonly IUserRepository userRepository;
+        private readonly IMapper mapper;
 
-        public UsersController(UsersDataStore dataStore)
+        public UsersController(
+            IUserRepository userRepository,
+            IMapper mapper)
         {
-            this.dataStore = dataStore;
+            this.userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+            this.mapper = mapper;
         }
 
         [HttpGet]
-        public ActionResult<ICollection<UserDto>> Users()
+        public async Task<ActionResult<IEnumerable<UserDto>>> Users()
         {
-            return Ok(dataStore.Users);
+            var usersFromDb = await userRepository.GetUsers();
+
+            var usersForResult = mapper.Map<IEnumerable<UserDto>>(usersFromDb);
+
+            return Ok(usersForResult);
         }
 
         [HttpGet("{id}")]
-        public ActionResult<UserDto> User(Guid id)
+        public async Task<ActionResult<UserDto>> User(Guid id)
         {
-            var user = dataStore.Users.FirstOrDefault(user => user.Id == id);
+            var userFromDb = await userRepository.GetUser(id);
 
-            if (user == null)
+            if (userFromDb == null)
             {
                 return NotFound();
             }
 
-            return Ok(user);
+            var userForResult = mapper.Map<UserDto>(userFromDb);
+
+            return Ok(userForResult);
         }
     }
 }

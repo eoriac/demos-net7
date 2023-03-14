@@ -1,7 +1,9 @@
 
 using DemoSesion3.Context;
+using DemoSesion3.Contracts;
 using DemoSesion3.Helpers;
 using DemoSesion3.Migrations;
+using DemoSesion3.Repository;
 using DemoSesion3.Services;
 using FluentMigrator.Runner;
 using Microsoft.AspNetCore.StaticFiles;
@@ -19,6 +21,7 @@ namespace DemoSesion3
             // Add services to the container.
             builder.Services.AddSingleton<DapperContext>();
             builder.Services.AddSingleton<Database>();
+
             builder.Services.AddLogging(c => c.AddFluentMigratorConsole())
                 .AddFluentMigratorCore()
                 .ConfigureRunner(c => c.AddSqlServer2016()
@@ -33,8 +36,10 @@ namespace DemoSesion3
 
             builder.Services.ConfigureSwagger();
 
-            builder.Services.AddSingleton<UsersDataStore>();
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddSingleton<FileExtensionContentTypeProvider>();
+
+            builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 #if DEBUG
             builder.Services.AddTransient<INotificationService, LocalNotificationService>();
