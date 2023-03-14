@@ -19,9 +19,11 @@ namespace DemoSesion3
             // Add services to the container.
             builder.Services.AddSingleton<DapperContext>();
             builder.Services.AddSingleton<Database>();
-            //builder.Services.AddFluentMigratorCore().ConfigureRunner(c => c.AddSQLite()
-            //    .WithGlobalConnectionString(Configuration.GetConnectionString("SqlConnection"))
-            //    .ScanIn(Assembly.GetExecutingAssembly()).For.Migrations()); ;
+            builder.Services.AddLogging(c => c.AddFluentMigratorConsole())
+                .AddFluentMigratorCore()
+                .ConfigureRunner(c => c.AddSqlServer2016()
+                    .WithGlobalConnectionString(builder.Configuration.GetConnectionString("SqlConnection"))
+                    .ScanIn(Assembly.GetExecutingAssembly()).For.Migrations());
 
             builder.Services.AddControllers(options =>
             {
