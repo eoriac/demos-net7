@@ -23,7 +23,7 @@ namespace DemoSesion3.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<UserDto>>> Users()
+        public async Task<ActionResult<IEnumerable<UserDto>>> GetUsers()
         {
             var usersFromDb = await userRepository.GetUsers();
 
@@ -33,7 +33,7 @@ namespace DemoSesion3.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<UserDto>> User(Guid id)
+        public async Task<ActionResult<UserDto>> GetUser(Guid id)
         {
             var userFromDb = await userRepository.GetUser(id);
 

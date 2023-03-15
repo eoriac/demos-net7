@@ -14,7 +14,7 @@ namespace DemoSesion3.Helpers
 
                 try
                 {
-                    databaseService.CreateDatabase("DapperDemoSessions");
+                    databaseService.CreateDatabase("DemoSessions");
                     migrationService.ListMigrations();
                     // Reset tables apply migration InitialTables down
                     // migrationService.MigrateDown(2023130300000);
