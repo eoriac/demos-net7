@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>DemoSesion3</name>
+    </assembly>
+    <members>
+        <member name="T:DemoSesion3.Controllers.GamesController">
+            <summary>
+            Games resource
+            </summary>
+        </member>
+        <member name="M:DemoSesion3.Controllers.GamesController.#ctor(DemoSesion3.Contracts.IGameRepository,DemoSesion3.Contracts.IUserRepository,AutoMapper.IMapper)">
+            <summary>
+            Ctor for GamesController
+            </summary>
+            <param name="gameRepository"></param>
+            <param name="userRepository"></param>
+            <param name="mapper"></param>
+        </member>
+        <member name="M:DemoSesion3.Controllers.GamesController.UserGamesAsync(System.Guid,System.String,System.String,System.String,System.Int32,System.Int32)">
+            <summary>
+            GET method to return all games for a given user
+            </summary>
+            <param name="userId"></param>
+            <param name="name"></param>
+            <param name="queryPattern"></param>
+            <param name="orderBy"></param>
+            <param name="pageNumber"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

@@ -9,6 +9,9 @@ using System.Text.Json;
 
 namespace DemoSesion3.Controllers
 {
+    /// <summary>
+    /// Games resource
+    /// </summary>
     [Route("api/users/{userId}/games")]
     [ApiController]
     public class GamesController : ControllerBase
@@ -18,6 +21,12 @@ namespace DemoSesion3.Controllers
         private readonly IUserRepository userRepository;
         private readonly IMapper mapper;
 
+        /// <summary>
+        /// Ctor for GamesController
+        /// </summary>
+        /// <param name="gameRepository"></param>
+        /// <param name="userRepository"></param>
+        /// <param name="mapper"></param>
         public GamesController(
             IGameRepository gameRepository,
             IUserRepository userRepository,
@@ -28,6 +37,16 @@ namespace DemoSesion3.Controllers
             this.mapper = mapper;
         }
 
+        /// <summary>
+        /// GET method to return all games for a given user
+        /// </summary>
+        /// <param name="userId">User ID</param>
+        /// <param name="name">Filter on User Name</param>
+        /// <param name="queryPattern"></param>
+        /// <param name="orderBy"></param>
+        /// <param name="pageNumber"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
         [HttpGet(Name = "UsersGames")]
         public async Task<ActionResult<ICollection<GameDto>>> UserGamesAsync(Guid userId, string? name, string? queryPattern, string? orderBy,
             int pageNumber = 1, int pageSize = 5)

@@ -42,6 +42,17 @@ namespace DemoSesion3
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
+
+                app.UseSwagger(options =>
+                {
+                    options.SerializeAsV2 = true;
+                });
+
+                app.UseSwaggerUI(options =>
+                {
+                    options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+                    options.RoutePrefix = "api/doc";
+                });
             }
 
             app.UseHttpsRedirection();
