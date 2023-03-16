@@ -24,6 +24,7 @@ namespace DemoSesion3
             builder.Services.ConfigureSwagger();
 
             builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IGameRepository, GameRepository>();
             builder.Services.AddSingleton<FileExtensionContentTypeProvider>();
 
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

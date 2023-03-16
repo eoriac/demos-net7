@@ -1,4 +1,6 @@
-﻿namespace DemoSesion3.Entities
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace DemoSesion3.Entities
 {
     public class User
     {
@@ -9,7 +11,5 @@
         public string Email { get; set; }
 
         public string AvatarUrl { get; set; }
-
-        public List<Game> Games { get; set; } = new List<Game>();
     }
 }

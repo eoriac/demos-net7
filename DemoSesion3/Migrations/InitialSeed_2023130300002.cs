@@ -35,7 +35,7 @@ namespace DemoSesion3.Migrations
                 {
                     Id = new Guid("67fbac34-1ee1-4697-b916-1748861dd275"),
                     Name = "Gandalf",
-                    Email = "gandalf@mage.com",                    
+                    Email = "gandalf@mage.com",
                 })
                 .Row(new Entities.User
                 {

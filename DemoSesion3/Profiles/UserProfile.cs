@@ -6,8 +6,7 @@ namespace DemoSesion3.Profiles
     {
         public UserProfile() 
         {
-            CreateMap<Entities.User, Models.UserDto>()
-                .ForMember(dest => dest.NumberOfGames, opt => opt.MapFrom(src => src.Games.Count));
+            CreateMap<Entities.User, Models.UserDto>();
         }
     }
 }

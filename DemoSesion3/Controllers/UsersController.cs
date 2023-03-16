@@ -40,9 +40,12 @@ namespace DemoSesion3.Controllers
             if (userFromDb == null)
             {
                 return NotFound();
-            }           
+            }
 
-            var userForResult = mapper.Map<UserDto>(userFromDb);            
+            var gamesUserFromDb = await userRepository.GetUserGames(userFromDb.Id);
+
+            var userForResult = mapper.Map<UserDto>(userFromDb);
+            userForResult.Games = mapper.Map<ICollection<GameDto>>(gamesUserFromDb);
 
             return Ok(userForResult);
         }

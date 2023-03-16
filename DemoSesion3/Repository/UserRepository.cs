@@ -27,7 +27,7 @@ namespace DemoSesion3.Repository
 
         public async Task<User> GetUser(Guid id)
         {
-            /*
+            
             var query = "SELECT * FROM Users WHERE Id = @Id";
 
             using (var connection = _context.CreateConnection())
@@ -36,8 +36,8 @@ namespace DemoSesion3.Repository
 
                 return User;
             }
-            */
 
+            /*
             var query = "SELECT * FROM Users WHERE Id = @Id;" +
                         "SELECT * FROM Games WHERE UserId = @Id";
 
@@ -51,6 +51,27 @@ namespace DemoSesion3.Repository
                 }
 
                 return user;
+            }
+            */
+        }
+
+        public async Task<ICollection<Game>> GetUserGames(Guid userId)
+        {
+            var query = "SELECT * FROM Users WHERE Id = @Id;" +
+                        "SELECT * FROM Games WHERE UserId = @Id";
+
+            using (var connection = _context.CreateConnection())
+            using (var multiQuery = await connection.QueryMultipleAsync(query, new { Id = userId }))
+            {
+                var resultGames = new List<Game>();
+
+                var user = await multiQuery.ReadSingleOrDefaultAsync<User>();
+                if (user != null)
+                {
+                    resultGames = (await multiQuery.ReadAsync<Game>()).ToList();
+                }
+
+                return resultGames;
             }
         }
 

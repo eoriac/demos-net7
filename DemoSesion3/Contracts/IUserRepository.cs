@@ -9,5 +9,7 @@ namespace DemoSesion3.Contracts
         public Task<User> GetUser(Guid id);
 
         public Task DeleteUser(Guid id);
+
+        public Task<ICollection<Game>> GetUserGames(Guid userId);
     }
 }

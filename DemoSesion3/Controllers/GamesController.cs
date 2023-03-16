@@ -1,4 +1,7 @@
-﻿using DemoSesion3.Models;
+﻿using AutoMapper;
+using DemoSesion3.Contracts;
+using DemoSesion3.Entities;
+using DemoSesion3.Models;
 using DemoSesion3.Services;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -10,112 +13,119 @@ namespace DemoSesion3.Controllers
     [ApiController]
     public class GamesController : ControllerBase
     {
-        private readonly UsersDataStore dataStore;
-        private readonly INotificationService notificationService;
         const int maxGamesPageSize = 20;
+        private readonly IGameRepository gameRepository;
+        private readonly IUserRepository userRepository;
+        private readonly IMapper mapper;
 
-        public GamesController(UsersDataStore dataStore, INotificationService notificationService)
+        public GamesController(
+            IGameRepository gameRepository,
+            IUserRepository userRepository,
+            IMapper mapper)
         {
-            this.dataStore = dataStore;
-            this.notificationService = notificationService;
+            this.gameRepository = gameRepository;
+            this.userRepository = userRepository;
+            this.mapper = mapper;
         }
 
         [HttpGet(Name = "UsersGames")]
-        public ActionResult<ICollection<GameDto>> UserGames(Guid userId, string? name, string? queryPattern, string? orderBy,
+        public async Task<ActionResult<ICollection<GameDto>>> UserGamesAsync(Guid userId, string? name, string? queryPattern, string? orderBy,
             int pageNumber = 1, int pageSize = 5)
         {
-            if (pageSize > maxGamesPageSize)
-            {
-                pageSize = maxGamesPageSize;
-            }
+            var gamesFromDb = await this.gameRepository.GetUserGames(userId);
 
-            var user = this.dataStore.Users.FirstOrDefault(usr => usr.Id == userId);
-
-            if (user == null) 
+            if (gamesFromDb == null)
             {
                 return NotFound();
             }
 
-            var gamesResult = user.Games
-                .Skip(pageSize * (pageNumber - 1))
-                .Take(pageSize);
+            var gamesForResult = mapper.Map<IEnumerable<GameDto>>(gamesFromDb);
 
-            if (!string.IsNullOrEmpty(name))
-            {
-                gamesResult = user.Games.Where(gm => gm.Name == name)
-                    .Skip(pageSize * (pageNumber - 1))
-                    .Take(pageSize);
-            }
+            return Ok(gamesForResult);
 
-            if (!string.IsNullOrEmpty(queryPattern))
-            {
-                gamesResult = user.Games.Where(gm => gm.Name.Contains(queryPattern) 
-                || (!string.IsNullOrEmpty(gm.Description) && string.Compare(gm.Description, queryPattern, StringComparison.InvariantCultureIgnoreCase) != 0))
-                    .Skip(pageSize * (pageNumber - 1))
-                    .Take(pageSize);
-            }
+            //if (pageSize > maxGamesPageSize)
+            //{
+            //    pageSize = maxGamesPageSize;
+            //}
 
-            var gameList = gamesResult.ToList();
+            //var user = this.dataStore.Users.FirstOrDefault(usr => usr.Id == userId);
 
-            if (!string.IsNullOrEmpty(orderBy))
-            {
-                gameList = gamesResult.OrderBy(gm => orderBy).ToList();
-            }
+            //if (user == null) 
+            //{
+            //    return NotFound();
+            //}
 
-            var totalItems = gameList.Count;
+            //var gamesResult = user.Games
+            //    .Skip(pageSize * (pageNumber - 1))
+            //    .Take(pageSize);
 
-            var paginationMetadata = new PaginationMetadata(pageSize, pageNumber, totalItems);
+            //if (!string.IsNullOrEmpty(name))
+            //{
+            //    gamesResult = user.Games.Where(gm => gm.Name == name)
+            //        .Skip(pageSize * (pageNumber - 1))
+            //        .Take(pageSize);
+            //}
 
-            Response.Headers.Add("X-Pagination",
-                JsonSerializer.Serialize(paginationMetadata));
+            //if (!string.IsNullOrEmpty(queryPattern))
+            //{
+            //    gamesResult = user.Games.Where(gm => gm.Name.Contains(queryPattern) 
+            //    || (!string.IsNullOrEmpty(gm.Description) && string.Compare(gm.Description, queryPattern, StringComparison.InvariantCultureIgnoreCase) != 0))
+            //        .Skip(pageSize * (pageNumber - 1))
+            //        .Take(pageSize);
+            //}
 
-            return Ok(gameList);
+            //var gameList = gamesResult.ToList();
+
+            //if (!string.IsNullOrEmpty(orderBy))
+            //{
+            //    gameList = gamesResult.OrderBy(gm => orderBy).ToList();
+            //}
+
+            //var totalItems = gameList.Count;
+
+            //var paginationMetadata = new PaginationMetadata(pageSize, pageNumber, totalItems);
+
+            //Response.Headers.Add("X-Pagination",
+            //    JsonSerializer.Serialize(paginationMetadata));
+
+            //return Ok(gameList);
         }
 
-        [HttpGet("{gameId}", Name = "GetName")]
-        public ActionResult<GameDto> UserGame(Guid userId, Guid gameId)
+        [HttpGet("{gameId}", Name = "GetGame")]
+        public async Task<ActionResult<GameDto>> UserGameAsync(Guid userId, Guid gameId)
         {
-            var user = this.dataStore.Users.FirstOrDefault(usr => usr.Id == userId);
+            var gamesFromDb = await this.gameRepository.GetUserGame(userId, gameId);
 
-            if (user == null)
+            if (gamesFromDb == null)
             {
                 return NotFound();
             }
 
-            var game = user.Games.FirstOrDefault(gm => gm.Id == gameId);
+            var gamesForResult = mapper.Map<IEnumerable<GameDto>>(gamesFromDb);
 
-            if (game == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(game);
+            return Ok(gamesForResult);
         }
 
         [HttpPost]
-        public ActionResult<GameDto> CreateGame(Guid userId, GamesForCreationDto game)
+        public async Task<ActionResult<GameDto>> CreateGame(Guid userId, GamesForCreationDto game)
         {
-            var user = this.dataStore.Users.FirstOrDefault(c => c.Id == userId);
+            var user = await this.userRepository.GetUser(userId);
             if (user == null)
             {
                 return NotFound();
             }
 
-            // demo purposes
-            var maxGameId = this.dataStore.Users.SelectMany(
-                             c => c.Games).Max(gm => gm.Id);
+            var entityGame = mapper.Map<Game>(game);
 
-            var resultGame = new GameDto()
-            {
-                Id = Guid.NewGuid(),
-                Name = game.Name,
-                Description = game.Description
-            };
+            entityGame.Id = Guid.NewGuid();
+            entityGame.UserId = userId;
 
-            user.Games.Add(resultGame);
+            var createdGame = await this.gameRepository.CreateUserGame(userId, entityGame);
+            
+            var resultGame = mapper.Map<GameDto>(createdGame);
 
             return CreatedAtRoute(
-                "GetName",
+                "GetGame",
                 new { 
                     userId = userId, 
                     gameId = resultGame.Id 
@@ -125,48 +135,50 @@ namespace DemoSesion3.Controllers
         }
 
         [HttpPut("{gameId}")]
-        public ActionResult<GameDto> UpdateGame(Guid userId, Guid gameId, GamesForUpdateDto game)
+        public async Task<ActionResult<GameDto>> UpdateGame(Guid userId, Guid gameId, GamesForUpdateDto game)
         {
-            var user = this.dataStore.Users.FirstOrDefault(c => c.Id == userId);
+            var user = await this.userRepository.GetUser(userId);
             if (user == null)
             {
                 return NotFound();
             }
 
-            var resultGame = user.Games.FirstOrDefault(gm => gm.Id == gameId);
-
-            if (resultGame == null)
-            {
-                return NotFound();
-            }
-
-            resultGame.Name = game.Name;
-            resultGame.Description = game.Description;
-
-            return NoContent();
-        }
-
-        [HttpPatch("{gameId}")]
-        public ActionResult PartialUpdate(Guid userId, Guid gameId, JsonPatchDocument<GamesForUpdateDto> patchDocument)
-        {
-            var user = this.dataStore.Users.FirstOrDefault(c => c.Id == userId);
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            var resultGameFromDb = user.Games.FirstOrDefault(gm => gm.Id == gameId);
+            var resultGameFromDb = await this.gameRepository.GetUserGame(userId, gameId);
 
             if (resultGameFromDb == null)
             {
                 return NotFound();
             }
 
-            var resultGameToPatch = new GamesForUpdateDto()
+            resultGameFromDb = mapper.Map<Game>(game);
+
+            var rows = await this.gameRepository.UpdateUserGame(gameId, resultGameFromDb);
+
+            if (rows == 0)
             {
-                Name = resultGameFromDb.Name,
-                Description = resultGameFromDb.Description
-            };
+                //
+            }
+
+            return NoContent();
+        }
+
+        [HttpPatch("{gameId}")]
+        public async Task<ActionResult> PartialUpdate(Guid userId, Guid gameId, JsonPatchDocument<GamesForUpdateDto> patchDocument)
+        {
+            var user = await this.userRepository.GetUser(userId);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var resultGameFromDb = await this.gameRepository.GetUserGame(userId, gameId);
+
+            if (resultGameFromDb == null)
+            {
+                return NotFound();
+            }
+
+            var resultGameToPatch = mapper.Map<GamesForUpdateDto>(resultGameFromDb);
 
             patchDocument.ApplyTo(resultGameToPatch, ModelState);
 
@@ -180,8 +192,9 @@ namespace DemoSesion3.Controllers
                 return BadRequest(ModelState);
             }
 
-            resultGameFromDb.Name = resultGameToPatch.Name;
-            resultGameFromDb.Description = resultGameToPatch.Description;
+            resultGameFromDb = mapper.Map<Game>(resultGameToPatch);
+
+            var rows  = await this.gameRepository.UpdateUserGame(gameId, resultGameFromDb);
 
             return NoContent();
         }
@@ -189,6 +202,8 @@ namespace DemoSesion3.Controllers
         [HttpDelete("{gameId}")]
         public ActionResult Delete(Guid userId, Guid gameId)
         {
+            throw new NotImplementedException();
+            /*
             var user = this.dataStore.Users.FirstOrDefault(c => c.Id == userId);
             if (user == null)
             {
@@ -207,6 +222,7 @@ namespace DemoSesion3.Controllers
             notificationService.Send("Se ha eliminar0", "sdfsdfd");
 
             return NoContent();
+            */
         }
 
     }
