@@ -1,0 +1,17 @@
+version: '3.4'
+
+services:
+  demosesion3:
+    image: ${DOCKER_REGISTRY-}demosesion3
+    container_name: web_api_demos
+    build:
+      context: .
+      dockerfile: DemoSesion3/Dockerfile
+  sqldb:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: sql_server_2019
+    environment:
+        - SA_PASSWORD=hTw&g98%Id6w
+        - ACCEPT_EULA=Y
+    ports:
+        - "1433:1433"
