@@ -3,6 +3,7 @@ using DemoSesion3.Helpers;
 using DemoSesion3.Repository;
 using DemoSesion3.Services;
 using Microsoft.AspNetCore.StaticFiles;
+using Serilog;
 
 namespace DemoSesion3
 {
@@ -10,10 +11,22 @@ namespace DemoSesion3
     {
         public static void Main(string[] args)
         {
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .WriteTo.Console()
+                .WriteTo.File("logs/demosessions.txt", rollingInterval: RollingInterval.Day)
+                .CreateLogger();
+
             var builder = WebApplication.CreateBuilder(args);
 
+
+            builder.Host.UseSerilog();
+
+            //builder.Logging.ClearProviders();
+            //builder.Logging.AddConsole();
+
             // Add services to the container.
-            builder.Services.ConfigureDb(builder.Configuration);
+            builder.Services.ConfigureDb(builder.Configuration);            
 
             builder.Services.AddControllers(options =>
             {

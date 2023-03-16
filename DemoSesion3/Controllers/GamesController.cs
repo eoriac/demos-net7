@@ -20,6 +20,7 @@ namespace DemoSesion3.Controllers
         private readonly IGameRepository gameRepository;
         private readonly IUserRepository userRepository;
         private readonly IMapper mapper;
+        private readonly ILogger<GamesController> logger;
 
         /// <summary>
         /// Ctor for GamesController
@@ -30,11 +31,13 @@ namespace DemoSesion3.Controllers
         public GamesController(
             IGameRepository gameRepository,
             IUserRepository userRepository,
-            IMapper mapper)
+            IMapper mapper,
+            ILogger<GamesController> logger)
         {
             this.gameRepository = gameRepository;
             this.userRepository = userRepository;
             this.mapper = mapper;
+            this.logger = logger;
         }
 
         /// <summary>
@@ -51,12 +54,16 @@ namespace DemoSesion3.Controllers
         public async Task<ActionResult<ICollection<GameDto>>> UserGamesAsync(Guid userId, string? name, string? queryPattern, string? orderBy,
             int pageNumber = 1, int pageSize = 5)
         {
-            var gamesFromDb = await this.gameRepository.GetUserGamesAsync(userId);
+            this.logger.LogDebug("Entering get games");
 
-            if (gamesFromDb == null)
+            var user = await this.userRepository.GetUserAsync(userId);
+            if (user == null)
             {
+                this.logger.LogInformation($"User not found for {userId}");
                 return NotFound();
             }
+
+            var gamesFromDb = await this.gameRepository.GetUserGamesAsync(userId);
 
             var gamesForResult = mapper.Map<IEnumerable<GameDto>>(gamesFromDb);
 
