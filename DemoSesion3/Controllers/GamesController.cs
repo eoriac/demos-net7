@@ -32,7 +32,7 @@ namespace DemoSesion3.Controllers
         public async Task<ActionResult<ICollection<GameDto>>> UserGamesAsync(Guid userId, string? name, string? queryPattern, string? orderBy,
             int pageNumber = 1, int pageSize = 5)
         {
-            var gamesFromDb = await this.gameRepository.GetUserGames(userId);
+            var gamesFromDb = await this.gameRepository.GetUserGamesAsync(userId);
 
             if (gamesFromDb == null)
             {
@@ -94,7 +94,7 @@ namespace DemoSesion3.Controllers
         [HttpGet("{gameId}", Name = "GetGame")]
         public async Task<ActionResult<GameDto>> UserGameAsync(Guid userId, Guid gameId)
         {
-            var gamesFromDb = await this.gameRepository.GetUserGame(userId, gameId);
+            var gamesFromDb = await this.gameRepository.GetUserGameAsync(userId, gameId);
 
             if (gamesFromDb == null)
             {
@@ -109,7 +109,7 @@ namespace DemoSesion3.Controllers
         [HttpPost]
         public async Task<ActionResult<GameDto>> CreateGame(Guid userId, GamesForCreationDto game)
         {
-            var user = await this.userRepository.GetUser(userId);
+            var user = await this.userRepository.GetUserAsync(userId);
             if (user == null)
             {
                 return NotFound();
@@ -120,7 +120,7 @@ namespace DemoSesion3.Controllers
             entityGame.Id = Guid.NewGuid();
             entityGame.UserId = userId;
 
-            var createdGame = await this.gameRepository.CreateUserGame(userId, entityGame);
+            var createdGame = await this.gameRepository.CreateUserGameAsync(userId, entityGame);
             
             var resultGame = mapper.Map<GameDto>(createdGame);
 
@@ -137,13 +137,13 @@ namespace DemoSesion3.Controllers
         [HttpPut("{gameId}")]
         public async Task<ActionResult<GameDto>> UpdateGame(Guid userId, Guid gameId, GamesForUpdateDto game)
         {
-            var user = await this.userRepository.GetUser(userId);
+            var user = await this.userRepository.GetUserAsync(userId);
             if (user == null)
             {
                 return NotFound();
             }
 
-            var resultGameFromDb = await this.gameRepository.GetUserGame(userId, gameId);
+            var resultGameFromDb = await this.gameRepository.GetUserGameAsync(userId, gameId);
 
             if (resultGameFromDb == null)
             {
@@ -152,7 +152,7 @@ namespace DemoSesion3.Controllers
 
             resultGameFromDb = mapper.Map<Game>(game);
 
-            var rows = await this.gameRepository.UpdateUserGame(gameId, resultGameFromDb);
+            var rows = await this.gameRepository.UpdateUserGameAsync(gameId, resultGameFromDb);
 
             if (rows == 0)
             {
@@ -165,13 +165,13 @@ namespace DemoSesion3.Controllers
         [HttpPatch("{gameId}")]
         public async Task<ActionResult> PartialUpdate(Guid userId, Guid gameId, JsonPatchDocument<GamesForUpdateDto> patchDocument)
         {
-            var user = await this.userRepository.GetUser(userId);
+            var user = await this.userRepository.GetUserAsync(userId);
             if (user == null)
             {
                 return NotFound();
             }
 
-            var resultGameFromDb = await this.gameRepository.GetUserGame(userId, gameId);
+            var resultGameFromDb = await this.gameRepository.GetUserGameAsync(userId, gameId);
 
             if (resultGameFromDb == null)
             {
@@ -194,7 +194,7 @@ namespace DemoSesion3.Controllers
 
             resultGameFromDb = mapper.Map<Game>(resultGameToPatch);
 
-            var rows  = await this.gameRepository.UpdateUserGame(gameId, resultGameFromDb);
+            var rows  = await this.gameRepository.UpdateUserGameAsync(gameId, resultGameFromDb);
 
             return NoContent();
         }

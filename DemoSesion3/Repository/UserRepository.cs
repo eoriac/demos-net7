@@ -14,7 +14,7 @@ namespace DemoSesion3.Repository
             _context = context;
         }
 
-        public async Task<IEnumerable<User>> GetUsers()
+        public async Task<IEnumerable<User>> GetUsersAsync()
         {
             var query = "SELECT Id, Name, Email, AvatarUrl FROM Users";
 
@@ -25,7 +25,7 @@ namespace DemoSesion3.Repository
             }
         }
 
-        public async Task<User> GetUser(Guid id)
+        public async Task<User> GetUserAsync(Guid id)
         {
             
             var query = "SELECT * FROM Users WHERE Id = @Id";
@@ -55,7 +55,7 @@ namespace DemoSesion3.Repository
             */
         }
 
-        public async Task<ICollection<Game>> GetUserGames(Guid userId)
+        public async Task<ICollection<Game>> GetUserGamesAsync(Guid userId)
         {
             var query = "SELECT * FROM Users WHERE Id = @Id;" +
                         "SELECT * FROM Games WHERE UserId = @Id";
@@ -75,7 +75,7 @@ namespace DemoSesion3.Repository
             }
         }
 
-        public async Task DeleteUser(Guid id)
+        public async Task DeleteUserAsync(Guid id)
         {
             var query = "DELETE FROM Users WHERE Id = @Id";
 

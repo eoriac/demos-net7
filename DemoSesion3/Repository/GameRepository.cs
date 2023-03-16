@@ -16,7 +16,7 @@ namespace DemoSesion3.Repository
             this.context = context;
         }
 
-        public async Task<Game> CreateUserGame(Guid userId, Game game)
+        public async Task<Game> CreateUserGameAsync(Guid userId, Game game)
         {
             var query = "INSERT INTO Games (Id, Name, Description, UserId) VALUES (@Id, @Name, @Description, @UserId)";
 
@@ -43,12 +43,12 @@ namespace DemoSesion3.Repository
             }
         }
 
-        public Task<int> DeleteUserGame(Guid userId, Guid gameId)
+        public Task<int> DeleteUserGameAsync(Guid userId, Guid gameId)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<Game> GetUserGame(Guid userId, Guid gameId)
+        public async Task<Game> GetUserGameAsync(Guid userId, Guid gameId)
         {
             var query = "SELECT * FROM Games WHERE UserId = @userId AND Id = @gameId";
 
@@ -60,7 +60,7 @@ namespace DemoSesion3.Repository
             }
         }
 
-        public async Task<IEnumerable<Game>> GetUserGames(Guid userId)
+        public async Task<IEnumerable<Game>> GetUserGamesAsync(Guid userId)
         {
             var query = "SELECT * FROM Games WHERE UserId = @userId";
 
@@ -72,7 +72,7 @@ namespace DemoSesion3.Repository
             }
         }
 
-        public async Task<int> UpdateUserGame(Guid gameId, Game gameForUpdate)
+        public async Task<int> UpdateUserGameAsync(Guid gameId, Game gameForUpdate)
         {
             var query = "UPDATE Games SET Name = @Name, Description = @Description WHERE Id = @Id";
 

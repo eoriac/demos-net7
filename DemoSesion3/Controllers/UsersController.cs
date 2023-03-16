@@ -25,7 +25,7 @@ namespace DemoSesion3.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UserDto>>> GetUsers()
         {
-            var usersFromDb = await userRepository.GetUsers();
+            var usersFromDb = await userRepository.GetUsersAsync();
 
             var usersForResult = mapper.Map<IEnumerable<UserDto>>(usersFromDb);
 
@@ -35,14 +35,14 @@ namespace DemoSesion3.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<UserDto>> GetUser(Guid id)
         {
-            var userFromDb = await userRepository.GetUser(id);
+            var userFromDb = await userRepository.GetUserAsync(id);
 
             if (userFromDb == null)
             {
                 return NotFound();
             }
 
-            var gamesUserFromDb = await userRepository.GetUserGames(userFromDb.Id);
+            var gamesUserFromDb = await userRepository.GetUserGamesAsync(userFromDb.Id);
 
             var userForResult = mapper.Map<UserDto>(userFromDb);
             userForResult.Games = mapper.Map<ICollection<GameDto>>(gamesUserFromDb);
