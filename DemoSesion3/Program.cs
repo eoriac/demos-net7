@@ -4,6 +4,7 @@ using DemoSesion3.Repository;
 using DemoSesion3.Services;
 using Microsoft.AspNetCore.StaticFiles;
 using Serilog;
+using Serilog.Events;
 
 namespace DemoSesion3
 {
@@ -13,12 +14,13 @@ namespace DemoSesion3
         {
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
-                .WriteTo.Console()
-                .WriteTo.File("logs/demosessions.txt", rollingInterval: RollingInterval.Day)
+                //.MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
+                //.MinimumLevel.Override("DemoSesion3.Controllers.GamesController", LogEventLevel.Information)
+                .WriteTo.Console(LogEventLevel.Debug)
+                .WriteTo.File("logs/demosessions.txt", LogEventLevel.Information, rollingInterval: RollingInterval.Day)
                 .CreateLogger();
 
             var builder = WebApplication.CreateBuilder(args);
-
 
             builder.Host.UseSerilog();
 
@@ -51,22 +53,22 @@ namespace DemoSesion3
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
+            //if (app.Environment.IsDevelopment())
+            //{
                 app.UseSwagger();
-                app.UseSwaggerUI();
+                //app.UseSwaggerUI();
 
-                app.UseSwagger(options =>
-                {
-                    options.SerializeAsV2 = true;
-                });
+                //app.UseSwagger(options =>
+                //{
+                //    options.SerializeAsV2 = true;
+                //});
 
                 app.UseSwaggerUI(options =>
                 {
                     options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
-                    options.RoutePrefix = "api/doc";
+                    options.RoutePrefix = "";
                 });
-            }
+            //}
 
             app.UseHttpsRedirection();
 

@@ -1,5 +1,8 @@
 ﻿namespace DemoSesion3.Models
 {
+    /// <summary>
+    /// Game resourcer DTO
+    /// </summary>
     public class GameDto
     {
         public Guid Id { get; set; }

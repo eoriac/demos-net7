@@ -15,6 +15,10 @@ namespace DemoSesion3.Helpers
 
             services.AddSwaggerGen(options =>
             {
+                var xmlCommentsFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlCommentsFullPath = Path.Combine(AppContext.BaseDirectory, xmlCommentsFile);
+                options.IncludeXmlComments(xmlCommentsFullPath);
+
                 options.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Version = "v1",
