@@ -2,12 +2,14 @@
 using DemoSesion3.Contracts;
 using DemoSesion3.Entities;
 using DemoSesion3.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DemoSesion3.Controllers
 {
     [Route("api/users")]
+    [Authorize]
     [ApiController]
     public class UsersController : ControllerBase
     {

@@ -19,6 +19,27 @@ namespace DemoSesion3.Helpers
                 var xmlCommentsFullPath = Path.Combine(AppContext.BaseDirectory, xmlCommentsFile);
                 options.IncludeXmlComments(xmlCommentsFullPath);
 
+                options.AddSecurityDefinition("GamesApiBearerAuth", new OpenApiSecurityScheme()
+                {
+                    Type = SecuritySchemeType.Http,                    
+                    Scheme = "Bearer",
+                    Description = "A valid token"
+                });
+
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "GamesApiBearerAuth"
+                            }
+                        }, new List<string>()
+                    }
+                });
+
                 options.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Version = "v1",

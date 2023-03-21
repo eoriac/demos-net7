@@ -3,6 +3,7 @@ using DemoSesion3.Contracts;
 using DemoSesion3.Entities;
 using DemoSesion3.Models;
 using DemoSesion3.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
@@ -13,6 +14,7 @@ namespace DemoSesion3.Controllers
     /// Games resource
     /// </summary>
     [Route("api/users/{userId}/games")]
+    [Authorize]
     [ApiController]
     public class GamesController : ControllerBase
     {
@@ -136,6 +138,7 @@ namespace DemoSesion3.Controllers
         public async Task<ActionResult<GameDto>> CreateGame(Guid userId, GamesForCreationDto game)
         {
             var user = await this.userRepository.GetUserAsync(userId);
+            
             if (user == null)
             {
                 return NotFound();
