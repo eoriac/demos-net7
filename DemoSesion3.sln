@@ -7,6 +7,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DemoSesion3", "DemoSesion3\
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{2EB107F2-9C71-4483-ACF7-53E2421FF354}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demos.IDP", "Demos.IDP\Demos.IDP.csproj", "{79EB576F-C6BB-439E-BEFD-A9C4064E97D8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demos.Authorization", "Demos.Authorization\Demos.Authorization.csproj", "{42DF5D96-D2CB-4E5D-B956-0859ECCD3624}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{2EB107F2-9C71-4483-ACF7-53E2421FF354}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2EB107F2-9C71-4483-ACF7-53E2421FF354}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2EB107F2-9C71-4483-ACF7-53E2421FF354}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79EB576F-C6BB-439E-BEFD-A9C4064E97D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79EB576F-C6BB-439E-BEFD-A9C4064E97D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79EB576F-C6BB-439E-BEFD-A9C4064E97D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79EB576F-C6BB-439E-BEFD-A9C4064E97D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42DF5D96-D2CB-4E5D-B956-0859ECCD3624}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42DF5D96-D2CB-4E5D-B956-0859ECCD3624}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42DF5D96-D2CB-4E5D-B956-0859ECCD3624}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42DF5D96-D2CB-4E5D-B956-0859ECCD3624}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

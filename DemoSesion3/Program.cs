@@ -1,7 +1,12 @@
+using Demos.Authorization;
+using DemoSesion3.Authorization;
 using DemoSesion3.Contracts;
 using DemoSesion3.Helpers;
+using DemoSesion3.Middlewares;
 using DemoSesion3.Repository;
 using DemoSesion3.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
@@ -48,7 +53,7 @@ namespace DemoSesion3
 
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-            builder.Services.AddAuthentication("Bearer")
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
                     options.TokenValidationParameters = new()
@@ -62,6 +67,21 @@ namespace DemoSesion3
                             Encoding.ASCII.GetBytes(builder.Configuration["Authentication:SecretForKey"]))
                     };
                 });
+
+            builder.Services.AddHttpContextAccessor();
+            builder.Services.AddScoped<IAuthorizationHandler, MustOwnGameHandler>();
+
+            builder.Services.AddAuthorization(options =>
+            {
+                options.AddPolicy(
+                    "UserCanAddGame", AuthorizationPolicies.CanAddGame());
+
+                options.AddPolicy("MustOwnGame", policyBuilder =>
+                {
+                    policyBuilder.RequireAuthenticatedUser();
+                    policyBuilder.AddRequirements(new MustOwnGameRequirement());
+                });
+            });
 
 #if DEBUG
             builder.Services.AddTransient<INotificationService, LocalNotificationService>();
@@ -95,6 +115,25 @@ namespace DemoSesion3
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            //app.Use((ctx, next) =>
+            //{
+            //    var headers = ctx.Response.Headers;
+
+            //    headers.Add("X-Frame-Options", "DENY");
+            //    headers.Add("X-XSS-Protection", "1; mode=block");
+            //    headers.Add("X-Content-Type-Options", "nosniff");
+            //    headers.Add("Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload");
+
+            //    headers.Remove("X-Powered-By");
+            //    headers.Remove("x-aspnet-version");
+
+            //    // Some headers won't remove
+            //    headers.Remove("Server");
+
+            //    return next();
+            //});
+            app.UseMiddleware<CustomMiddleware>();
 
             app.UseAuthentication();
 

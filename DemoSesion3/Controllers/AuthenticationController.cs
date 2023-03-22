@@ -56,7 +56,9 @@ namespace DemoSesion3.Controllers
             {
                 new Claim("sub", user.Id.ToString()),
                 new Claim("name", user.Name),
-                new Claim("email", user.Email)
+                new Claim("email", user.Email),
+                new Claim("company", "Steam"),
+                new Claim("role", "GoldUser")
             };
 
             var jwtSecurityToken = new JwtSecurityToken(

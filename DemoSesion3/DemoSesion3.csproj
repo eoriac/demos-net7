@@ -37,4 +37,8 @@
     <Folder Include="logs\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Demos.Authorization\Demos.Authorization.csproj" />
+  </ItemGroup>
+
 </Project>

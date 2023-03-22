@@ -30,6 +30,7 @@ namespace DemoSesion3.Controllers
         /// <param name="gameRepository"></param>
         /// <param name="userRepository"></param>
         /// <param name="mapper"></param>
+        /// <param name="logger"></param>
         public GamesController(
             IGameRepository gameRepository,
             IUserRepository userRepository,
@@ -46,13 +47,15 @@ namespace DemoSesion3.Controllers
         /// GET method to return all games for a given user
         /// </summary>
         /// <param name="userId">User ID</param>
-        /// <param name="name">Filter on User Name</param>
+        /// <param name="name">Filter on user Name</param>
         /// <param name="queryPattern"></param>
-        /// <param name="orderBy"></param>
-        /// <param name="pageNumber"></param>
-        /// <param name="pageSize"></param>
+        /// <param name="orderBy">Order by results</param>
+        /// <param name="pageNumber">Page Number</param>
+        /// <param name="pageSize">Page Size, default = 5, max = 20</param>
         /// <returns></returns>
         [HttpGet(Name = "UsersGames")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]        
         public async Task<ActionResult<ICollection<GameDto>>> UserGamesAsync(Guid userId, string? name, string? queryPattern, string? orderBy,
             int pageNumber = 1, int pageSize = 5)
         {
@@ -119,7 +122,15 @@ namespace DemoSesion3.Controllers
             //return Ok(gameList);
         }
 
+        /// <summary>
+        /// Get a User Game
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="gameId"></param>
+        /// <returns>A <seealso cref="GameDto"/>GameDto object</returns>
         [HttpGet("{gameId}", Name = "GetGame")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<GameDto>> UserGameAsync(Guid userId, Guid gameId)
         {
             var gamesFromDb = await this.gameRepository.GetUserGameAsync(userId, gameId);
@@ -135,14 +146,27 @@ namespace DemoSesion3.Controllers
         }
 
         [HttpPost]
+        //[Authorize(Roles = "GoldUser")]
+        [Authorize(Policy = "UserCanAddGame")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<GameDto>> CreateGame(Guid userId, GamesForCreationDto game)
-        {
+        {            
             var user = await this.userRepository.GetUserAsync(userId);
             
             if (user == null)
             {
                 return NotFound();
             }
+
+            //var userId = User.Claims
+            //    .FirstOrDefault(c => c.Type == "sub")?.Value;
+            //            if (userId == null)
+            //            {
+            //                throw new Exception("User identifier is missing from token.");
+            //            }
+            //entityGame.UserId = userId;
 
             var entityGame = mapper.Map<Game>(game);
 
@@ -164,6 +188,9 @@ namespace DemoSesion3.Controllers
         }
 
         [HttpPut("{gameId}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<GameDto>> UpdateGame(Guid userId, Guid gameId, GamesForUpdateDto game)
         {
             var user = await this.userRepository.GetUserAsync(userId);
@@ -192,6 +219,9 @@ namespace DemoSesion3.Controllers
         }
 
         [HttpPatch("{gameId}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> PartialUpdate(Guid userId, Guid gameId, JsonPatchDocument<GamesForUpdateDto> patchDocument)
         {
             var user = await this.userRepository.GetUserAsync(userId);
@@ -229,6 +259,9 @@ namespace DemoSesion3.Controllers
         }
 
         [HttpDelete("{gameId}")]
+        [Authorize(Policy = "MustOwnGame")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult Delete(Guid userId, Guid gameId)
         {
             throw new NotImplementedException();

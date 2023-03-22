@@ -1,6 +1,7 @@
 ﻿using DemoSesion3.Context;
 using DemoSesion3.Migrations;
 using FluentMigrator.Runner;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
@@ -22,7 +23,7 @@ namespace DemoSesion3.Helpers
                 options.AddSecurityDefinition("GamesApiBearerAuth", new OpenApiSecurityScheme()
                 {
                     Type = SecuritySchemeType.Http,                    
-                    Scheme = "Bearer",
+                    Scheme = JwtBearerDefaults.AuthenticationScheme,
                     Description = "A valid token"
                 });
 

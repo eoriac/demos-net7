@@ -72,6 +72,18 @@ namespace DemoSesion3.Repository
             }
         }
 
+        public async Task<bool> IsGameOwnerAsync(Guid userId, Guid gameId)
+        {
+            var query = "SELECT * FROM Games WHERE UserId = @userId";
+
+            using (var connection = context.CreateConnection())
+            {
+                var games = (await connection.QueryAsync<Game>(query, new { userId })).ToList();
+
+                return games.Find(gm => gm.Id == gameId) != null;
+            }
+        }
+
         public async Task<int> UpdateUserGameAsync(Guid gameId, Game gameForUpdate)
         {
             var query = "UPDATE Games SET Name = @Name, Description = @Description WHERE Id = @Id";

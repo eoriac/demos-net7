@@ -4,15 +4,16 @@ namespace DemoSesion3.Contracts
 {
     public interface IGameRepository
     {
-        public Task<IEnumerable<Game>> GetUserGamesAsync(Guid userId);
+        Task<IEnumerable<Game>> GetUserGamesAsync(Guid userId);
 
-        public Task<Game> GetUserGameAsync(Guid userId, Guid gameId);
+        Task<Game> GetUserGameAsync(Guid userId, Guid gameId);
 
-        public Task<int> DeleteUserGameAsync(Guid userId, Guid gameId);
+        Task<int> DeleteUserGameAsync(Guid userId, Guid gameId);
 
-        public Task<int> UpdateUserGameAsync(Guid gameId, Game gameForUpdate);
+        Task<int> UpdateUserGameAsync(Guid gameId, Game gameForUpdate);
 
-        public Task<Game> CreateUserGameAsync(Guid userId, Game game);
+        Task<Game> CreateUserGameAsync(Guid userId, Game game);
 
+        Task<bool> IsGameOwnerAsync(Guid userId, Guid gameId);
     }
 }
