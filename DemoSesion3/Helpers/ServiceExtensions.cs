@@ -3,6 +3,7 @@ using DemoSesion3.Migrations;
 using FluentMigrator.Runner;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 
@@ -39,44 +40,27 @@ namespace DemoSesion3.Helpers
                             }
                         }, new List<string>()
                     }
-                });
-
-                options.SwaggerDoc("v1", new OpenApiInfo
-                {
-                    Version = "v1",
-                    Title = "OpenAPI configuration sample",
-                    Description = "Extending configuration on OpenAPI UI with ASP.NET Core",
-                    TermsOfService = new Uri("https://example.com/terms"),
-                    Contact = new OpenApiContact
-                    {
-                        Name = "Example Contact",
-                        Url = new Uri("https://example.com/contact")
-                    },
-                    License = new OpenApiLicense
-                    {
-                        Name = "Example License",
-                        Url = new Uri("https://example.com/license")
-                    }
-                });
+                });                
             });
         }
 
-        public static void ConfigureControllers(this IServiceCollection services)
+        public static void ConfigureCors(this IServiceCollection services, string policyName)
         {
-            services.AddControllers(setupAction =>
+            services.AddCors(options =>
             {
-                setupAction.Filters.Add(
-                    new ProducesResponseTypeAttribute(StatusCodes.Status400BadRequest));
-                setupAction.Filters.Add(
-                    new ProducesResponseTypeAttribute(StatusCodes.Status406NotAcceptable));
-                setupAction.Filters.Add(
-                    new ProducesResponseTypeAttribute(StatusCodes.Status500InternalServerError));
-                setupAction.Filters.Add(
-                    new ProducesDefaultResponseTypeAttribute());
-                setupAction.Filters.Add(
-                    new ProducesResponseTypeAttribute(StatusCodes.Status401Unauthorized));
+                options.AddPolicy(policyName,
+                    builder => builder.AllowAnyOrigin()
+                        //.WithOrigins("https://localhost:75236",
+                        //             "https://blog.azure.com")
+                        .WithMethods("PUT", "GET")
+                        .AllowAnyHeader()
+                        .AllowCredentials());
 
-                setupAction.ReturnHttpNotAcceptable = true;
+                options.AddDefaultPolicy(
+                    policy =>
+                    {
+                        policy.WithOrigins("https://localhost:75236", "https://blog.azure.com");
+                    });
             });
         }
 

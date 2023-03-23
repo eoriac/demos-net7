@@ -7,6 +7,8 @@ using DemoSesion3.Repository;
 using DemoSesion3.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
@@ -17,6 +19,8 @@ namespace DemoSesion3
 {
     public class Program
     {
+        const string CorsPolicyName = "CorsPolicy";
+
         public static void Main(string[] args)
         {
             Log.Logger = new LoggerConfiguration()
@@ -35,11 +39,14 @@ namespace DemoSesion3
             //builder.Logging.AddConsole();
 
             // Add services to the container.
-            builder.Services.ConfigureDb(builder.Configuration);            
+            builder.Services.ConfigureDb(builder.Configuration);
+
+            builder.Services.ConfigureCors(CorsPolicyName);
 
             builder.Services.AddControllers(options =>
             {
                 options.ReturnHttpNotAcceptable = true;
+
             }).AddNewtonsoftJson()
             .AddXmlDataContractSerializerFormatters();            
 
@@ -89,6 +96,26 @@ namespace DemoSesion3
             builder.Services.AddTransient<INotificationService, CloudNotificationService>();
 #endif
 
+            builder.Services.AddApiVersioning(setupAction =>
+            {
+                setupAction.AssumeDefaultVersionWhenUnspecified = true;
+                setupAction.DefaultApiVersion = new Microsoft.AspNetCore.Mvc.ApiVersion(1, 0);
+                setupAction.ReportApiVersions = true;
+                setupAction.ApiVersionReader = ApiVersionReader.Combine(
+                    new UrlSegmentApiVersionReader(), // /api/v1/*
+                    new HeaderApiVersionReader("x-api-version"), // x-api-version:1.0
+                    new MediaTypeApiVersionReader("x-api-version")); // Accept/Content-Type: application/json; x-api-version=1.0
+
+            });
+
+            builder.Services.AddVersionedApiExplorer(setup =>
+            {
+                setup.GroupNameFormat = "'v'VVV";
+                setup.SubstituteApiVersionInUrl = true;
+            });
+
+            builder.Services.ConfigureOptions<SwaggerOptions>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -98,16 +125,23 @@ namespace DemoSesion3
             //if (app.Environment.IsDevelopment())
             //{
             app.UseSwagger();
-                //app.UseSwaggerUI();
+            //app.UseSwaggerUI();
 
-                //app.UseSwagger(options =>
-                //{
-                //    options.SerializeAsV2 = true;
-                //});
+            //app.UseSwagger(options =>
+            //{
+            //    options.SerializeAsV2 = true;
+            //});
+
+            var apiVersionDescriptionProvider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
 
             app.UseSwaggerUI(options =>
             {
-                options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+                foreach (var description in apiVersionDescriptionProvider.ApiVersionDescriptions)
+                {
+                    options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json",
+                        description.GroupName.ToUpperInvariant());
+                }
+
                 options.RoutePrefix = "";
             });
             //}
@@ -115,6 +149,10 @@ namespace DemoSesion3
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            // Enable cors to all, after routing but before authorization
+            // app.UseCors();
+
 
             //app.Use((ctx, next) =>
             //{
@@ -133,6 +171,7 @@ namespace DemoSesion3
 
             //    return next();
             //});
+
             app.UseMiddleware<CustomMiddleware>();
 
             app.UseAuthentication();

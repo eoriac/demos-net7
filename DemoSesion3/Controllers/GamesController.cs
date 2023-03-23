@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using DemoSesion3.Contracts;
 using DemoSesion3.Entities;
+using DemoSesion3.Filters;
 using DemoSesion3.Models;
 using DemoSesion3.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
@@ -12,10 +14,13 @@ namespace DemoSesion3.Controllers
 {
     /// <summary>
     /// Games resource
-    /// </summary>
-    [Route("api/users/{userId}/games")]
+    /// </summary>    
     [Authorize]
+    //[ApiVersion("1.0")]
+    //[ApiVersion("2.0")]
     [ApiController]
+    //[Route("api/v{version:apiVersion}/users/{userId}/games")]
+    [Route("api/users/{userId}/games")]
     public class GamesController : ControllerBase
     {
         const int maxGamesPageSize = 20;
@@ -129,6 +134,7 @@ namespace DemoSesion3.Controllers
         /// <param name="gameId"></param>
         /// <returns>A <seealso cref="GameDto"/>GameDto object</returns>
         [HttpGet("{gameId}", Name = "GetGame")]
+        // [SpecificHeader]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<GameDto>> UserGameAsync(Guid userId, Guid gameId)

@@ -7,7 +7,7 @@
         <member name="T:DemoSesion3.Controllers.GamesController">
             <summary>
             Games resource
-            </summary>
+            </summary>    
         </member>
         <member name="M:DemoSesion3.Controllers.GamesController.#ctor(DemoSesion3.Contracts.IGameRepository,DemoSesion3.Contracts.IUserRepository,AutoMapper.IMapper,Microsoft.Extensions.Logging.ILogger{DemoSesion3.Controllers.GamesController})">
             <summary>
