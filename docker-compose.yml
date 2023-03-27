@@ -6,7 +6,7 @@ services:
     container_name: web_api_demos
     build:
       context: .
-      dockerfile: DemoSesion3/Dockerfile
+      dockerfile: Demo.API/Dockerfile
   sqldb:
     image: mcr.microsoft.com/mssql/server:2019-latest
     container_name: sql_server_2019
