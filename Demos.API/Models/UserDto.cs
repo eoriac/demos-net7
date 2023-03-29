@@ -1,4 +1,6 @@
-﻿namespace Demo.API.Models
+﻿using Demos.API.Models.GamesDtos;
+
+namespace Demo.API.Models
 {
     public class UserDto
     {

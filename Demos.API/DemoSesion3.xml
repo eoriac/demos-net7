@@ -36,9 +36,9 @@
             </summary>
             <param name="userId"></param>
             <param name="gameId"></param>
-            <returns>A <seealso cref="T:Demo.API.Models.GameDto"/>GameDto object</returns>
+            <returns>A <seealso cref="T:Demos.API.Models.GamesDtos.GameDto"/>GameDto object</returns>
         </member>
-        <member name="T:Demo.API.Models.GameDto">
+        <member name="T:Demos.API.Models.GamesDtos.GameDto">
             <summary>
             Game resourcer DTO
             </summary>

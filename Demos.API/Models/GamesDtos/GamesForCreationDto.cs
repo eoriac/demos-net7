@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Demo.API.Models
+namespace Demos.API.Models.GamesDtos
 {
     public class GamesForCreationDto
     {
@@ -9,6 +9,6 @@ namespace Demo.API.Models
         public string Name { get; set; }
 
         [MaxLength(200)]
-        public string Description { get; set; } = String.Empty;
+        public string Description { get; set; } = string.Empty;
     }
 }

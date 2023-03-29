@@ -2,6 +2,7 @@
 using Demo.API.Contracts;
 using Demo.API.Entities;
 using Demo.API.Models;
+using Demos.API.Models.GamesDtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

@@ -2,8 +2,8 @@
 using Demo.API.Contracts;
 using Demo.API.Entities;
 using Demo.API.Filters;
-using Demo.API.Models;
 using Demo.API.Services;
+using Demos.API.Models.GamesDtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.JsonPatch;

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Demo.API.Models
+namespace Demos.API.Models.GamesDtos
 {
     public class GamesForUpdateDto
     {

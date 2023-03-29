@@ -1,4 +1,4 @@
-﻿namespace Demo.API.Models
+﻿namespace Demos.API.Models.GamesDtos
 {
     /// <summary>
     /// Game resourcer DTO
