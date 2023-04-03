@@ -1,0 +1,21 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="container">
+    <div class="row">
+        @foreach (var item in Model.Users)
+        {
+            <div class="pull-left col-md-3">
+                <div>
+                    <div class="h6">@item.Name</div>
+                    <div class="h6">@item.Email</div>
+                    <div class="bottomMarginDefault">
+                        <a asp-action="EditUser" asp-controller="Home" asp-route-id="@item.Id">Edit User</a> |
+                        <a asp-action="DeleteUser" asp-controller="Home" asp-route-id="@item.Id">Delete User</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div> 

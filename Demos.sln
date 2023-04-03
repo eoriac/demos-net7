@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demos.Authorization", "Demo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demos.API.Tests", "Demos.API.Tests\Demos.API.Tests.csproj", "{ABC09CAF-52A5-4A12-BBF4-4607B5733CBF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demos.Client", "Demos.Client\Demos.Client.csproj", "{AB42102C-18C9-4321-BA5A-13AAA427B885}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{ABC09CAF-52A5-4A12-BBF4-4607B5733CBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ABC09CAF-52A5-4A12-BBF4-4607B5733CBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ABC09CAF-52A5-4A12-BBF4-4607B5733CBF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AB42102C-18C9-4321-BA5A-13AAA427B885}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB42102C-18C9-4321-BA5A-13AAA427B885}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB42102C-18C9-4321-BA5A-13AAA427B885}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB42102C-18C9-4321-BA5A-13AAA427B885}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

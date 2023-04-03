@@ -14,6 +14,8 @@ using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using Serilog.Events;
 using System.Text;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.Identity.Web;
 
 namespace Demo.API
 {
@@ -41,7 +43,7 @@ namespace Demo.API
             // Add services to the container.
             builder.Services.ConfigureDb(builder.Configuration);
 
-            builder.Services.ConfigureCors(CorsPolicyName);
+            //builder.Services.ConfigureCors(CorsPolicyName);
 
             builder.Services.AddControllers(options =>
             {
@@ -54,26 +56,48 @@ namespace Demo.API
 
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IGameRepository, GameRepository>();
-            builder.Services.AddTransient<IPasswordHash, PasswordHasher>();
+            //builder.Services.AddTransient<IPasswordHash, PasswordHasher>();
 
             builder.Services.AddSingleton<FileExtensionContentTypeProvider>();
 
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
+            //.AddJwtBearer(options =>
+            //{
+            //    options.TokenValidationParameters = new()
+            //    {
+            //        ValidateIssuer = true,
+            //        ValidateAudience = true,
+            //        ValidateIssuerSigningKey = true,
+            //        ValidIssuer = builder.Configuration["Authentication:Issuer"],
+            //        ValidAudience = builder.Configuration["Authentication:Audience"],
+            //        IssuerSigningKey = new SymmetricSecurityKey(
+            //            Encoding.ASCII.GetBytes(builder.Configuration["Authentication:SecretForKey"]))
+            //    };
+            //});
+            .AddJwtBearer(options =>
+            {
+                options.Authority = "https://localhost:5001";
+                options.Audience = "demosapi";
+                options.TokenValidationParameters = new()
                 {
-                    options.TokenValidationParameters = new()
-                    {
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidateIssuerSigningKey = true,
-                        ValidIssuer = builder.Configuration["Authentication:Issuer"],
-                        ValidAudience = builder.Configuration["Authentication:Audience"],
-                        IssuerSigningKey = new SymmetricSecurityKey(
-                            Encoding.ASCII.GetBytes(builder.Configuration["Authentication:SecretForKey"]))
-                    };
-                });
+                    NameClaimType = "given_name",
+                    RoleClaimType = "role",
+                    ValidTypes = new[] { "at+jwt" }
+                };
+            });
+            //.AddOAuth2Introspection(options =>
+            //{
+            //    options.Authority = "https://localhost:44300";
+            //    options.ClientId = "demosapiclient";
+            //    options.ClientSecret = "secret";
+            //    options.NameClaimType = "given_name";
+            //    options.RoleClaimType = "role";
+            //});
+            //.AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
 
             builder.Services.AddHttpContextAccessor();
             builder.Services.AddScoped<IAuthorizationHandler, MustOwnGameHandler>();

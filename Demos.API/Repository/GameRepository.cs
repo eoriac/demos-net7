@@ -2,7 +2,6 @@
 using Demo.API.Context;
 using Demo.API.Contracts;
 using Demo.API.Entities;
-using Demo.API.Models;
 using System.Data;
 
 namespace Demo.API.Repository

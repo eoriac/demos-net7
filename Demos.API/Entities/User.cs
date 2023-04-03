@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace Demo.API.Entities
+﻿namespace Demo.API.Entities
 {
     public class User
     {

@@ -1,14 +1,10 @@
 ﻿using AutoMapper;
 using Demo.API.Contracts;
 using Demo.API.Entities;
-using Demo.API.Filters;
-using Demo.API.Services;
 using Demos.API.Models.GamesDtos;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
-using System.Text.Json;
 
 namespace Demo.API.Controllers
 {

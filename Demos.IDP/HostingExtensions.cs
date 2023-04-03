@@ -1,3 +1,4 @@
+using Duende.IdentityServer;
 using Serilog;
 
 namespace Demos.IDP;
@@ -16,8 +17,25 @@ internal static class HostingExtensions
             })
             .AddInMemoryIdentityResources(Config.IdentityResources)
             .AddInMemoryApiScopes(Config.ApiScopes)
-            .AddInMemoryClients(Config.Clients);
+            .AddInMemoryApiResources(Config.ApiResources)
+            .AddInMemoryClients(Config.Clients)
+            .AddTestUsers(TestUsers.Users);
 
+        builder.Services
+            .AddAuthentication()
+            .AddOpenIdConnect("AAD", "Azure Active Directory", options =>
+            {
+                options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+                options.Authority = "https://login.microsoftonline.com/7a7369b6-6f35-45ce-8185-3f70480ee154/v2.0";
+                options.ClientId = "22efb8cd-d7ec-418d-8f1b-0530e04e3f12";
+                options.ClientSecret = "8-A8Q~EEhRrqfIc2HCfrCoJZG9ImsCgGg-8etavb";
+                options.ResponseType = "code";
+                options.CallbackPath = new PathString("/signin-aad/");
+                options.SignedOutCallbackPath = new PathString("/signout-aad/");
+                options.Scope.Add("email");
+                options.Scope.Add("offline_access");
+                options.SaveTokens = true;
+            });
         return builder.Build();
     }
     

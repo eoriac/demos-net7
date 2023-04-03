@@ -28,34 +28,44 @@ public class TestUsers
             {
                 new TestUser
                 {
-                    SubjectId = "1",
-                    Username = "alice",
-                    Password = "alice",
+                    SubjectId = "67fbac34-1ee1-4697-b916-1748861dd275",
+                    Username = "Gandalf",
+                    Password = "thering",
                     Claims =
                     {
-                        new Claim(JwtClaimTypes.Name, "Alice Smith"),
-                        new Claim(JwtClaimTypes.GivenName, "Alice"),
-                        new Claim(JwtClaimTypes.FamilyName, "Smith"),
-                        new Claim(JwtClaimTypes.Email, "AliceSmith@email.com"),
+                        new Claim(JwtClaimTypes.Name, "Gandalf The White"),
+                        new Claim(JwtClaimTypes.GivenName, "Gandalf"),
+                        new Claim(JwtClaimTypes.FamilyName, "The White"),
+                        new Claim(JwtClaimTypes.Email, "gandalf@mage.com"),
                         new Claim(JwtClaimTypes.EmailVerified, "true", ClaimValueTypes.Boolean),
-                        new Claim(JwtClaimTypes.WebSite, "http://alice.com"),
-                        new Claim(JwtClaimTypes.Address, JsonSerializer.Serialize(address), IdentityServerConstants.ClaimValueTypes.Json)
                     }
                 },
                 new TestUser
                 {
-                    SubjectId = "2",
-                    Username = "bob",
-                    Password = "bob",
+                    SubjectId = "70dc14ae-78cb-41fc-a675-02a7991660ff",
+                    Username = "Frodo",
+                    Password = "theshire",
                     Claims =
                     {
-                        new Claim(JwtClaimTypes.Name, "Bob Smith"),
-                        new Claim(JwtClaimTypes.GivenName, "Bob"),
-                        new Claim(JwtClaimTypes.FamilyName, "Smith"),
-                        new Claim(JwtClaimTypes.Email, "BobSmith@email.com"),
+                        new Claim(JwtClaimTypes.Name, "Frodo Baggins"),
+                        new Claim(JwtClaimTypes.GivenName, "Frodo"),
+                        new Claim(JwtClaimTypes.FamilyName, "Baggins"),
+                        new Claim(JwtClaimTypes.Email, "frodo@theshire.com"),
                         new Claim(JwtClaimTypes.EmailVerified, "true", ClaimValueTypes.Boolean),
-                        new Claim(JwtClaimTypes.WebSite, "http://bob.com"),
-                        new Claim(JwtClaimTypes.Address, JsonSerializer.Serialize(address), IdentityServerConstants.ClaimValueTypes.Json)
+                    }
+                },
+                new TestUser
+                {
+                    SubjectId = "ba434a19-4e5d-49d6-98e0-43ff2b76482d",
+                    Username = "Trancos",
+                    Password = "middleearth",
+                    Claims =
+                    {
+                        new Claim(JwtClaimTypes.Name, "Aragorn II"),
+                        new Claim(JwtClaimTypes.GivenName, "Aragorn "),
+                        new Claim(JwtClaimTypes.FamilyName, "II"),
+                        new Claim(JwtClaimTypes.Email, "king@middleearth.com"),
+                        new Claim(JwtClaimTypes.EmailVerified, "true", ClaimValueTypes.Boolean),
                     }
                 }
             };

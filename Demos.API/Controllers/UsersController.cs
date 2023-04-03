@@ -1,10 +1,8 @@
 ﻿using AutoMapper;
 using Demo.API.Contracts;
-using Demo.API.Entities;
 using Demo.API.Models;
 using Demos.API.Models.GamesDtos;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Demo.API.Controllers
@@ -28,6 +26,8 @@ namespace Demo.API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UserDto>>> GetUsers()
         {
+            //var claims = User.Claims.ToList();
+
             var usersFromDb = await userRepository.GetUsersAsync();
 
             var usersForResult = mapper.Map<IEnumerable<UserDto>>(usersFromDb);
